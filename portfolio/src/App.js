@@ -1,16 +1,19 @@
+import { accordionActionsClasses } from '@mui/material';
+import Button from '@mui/material/Button';
+
 import React from 'react';
 import './App.css';
 
-let x = 5;
+
 
 export default function App() {
-  x = x + 1;
+
   return (
     <div>
       <header>
         <h1>Tic Tac Toe</h1>
       </header>
-      <p>{x}</p>
+      
       <Game />   
     </div>
   )
@@ -28,11 +31,50 @@ function generateGrid(rows, columns, mapper) {
 
 const newTicTacToeGrid = () =>
   generateGrid(3, 3, () => null)
+
+const clone = x => JSON.parse(JSON.stringify(x))
+
+  const NEXT_TURN = {
+    O: 'X',
+    X: 'O',
+  }
+
+  const getInitialState = () => ({
+    grid: newTicTacToeGrid(),
+    turn: 'X'
+  })
   
-/*function Game() {
-  const grid = newTicTacToeGrid()
-  return null
-}*/
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case 'RESET':
+        return getInitialState()
+
+    }
+  }
+  
+
+function Game() {
+  const [state, dispatch] = React.useReducer(reducer, getInitialState())
+  const { grid, turn } = state
+
+  const handleClick = (x,y) => {
+    dispatch({ type: 'CLICK', payload: { x, y }})
+  }
+
+  const reset = () => {
+    dispatch({ type: 'RESET' })
+  }
+
+  return (
+    <div sytle={{ textAlign: 'center'}}>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <div>Next up: {turn}</div>
+      <button onClick={reset} type="button">Reset</button>
+      </div>
+      <Grid Cell={Button} grid={grid} handleClick={handleClick} />
+    </div>
+  )
+}
 
 function Grid({ grid }) {
   return(
@@ -62,11 +104,35 @@ const cellStyle = {
   width: 75,
 }
 
-function Cell({ cell }) {
-  return <div style={cellStyle}>{cell}</div>
+
+
+function Cell({ cell, handleClick}) {
+  return (
+    <div style={cellStyle}>
+      <button type="button" onClick={handleClick}>
+        {cell}
+      </button>
+    </div>
+  )
 }
 
-function Game() {
-  const game = newTicTacToeGrid()
-  return <Grid grid={game} />
-}
+
+
+ //{
+    //   const { x, y } = action.payload
+    //   const nextState = clone(state)
+    //   const {grid, turn } = nextState
+    //   if (grid[y][x]) {
+    //     return state
+    //   }
+
+    //   grid [y][x] = turn
+    //   nextState.turn = NEXT_TURN[turn]
+    //   return nextState
+    // }
+
+    // default:
+      
+  
+
+
